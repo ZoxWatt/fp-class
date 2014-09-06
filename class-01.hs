@@ -40,18 +40,28 @@ avg a b = (a + b)/2
   а) Вычислите в ghci среднее арифметическое следующих пар чисел: 332 и 723, 34.34 и 93.27.
      Впишите ответы:
 
+	*Main> avg 332 723
+	527.5
+
+	*Main> avg 34.34 93.27
+	63.805
+
   б) Напишите функцию avg3, вычисляющую среднее арифметическое трёх заданных чисел.
      Проверьте результаты её работы на двух тройках чисел.
 
 -}
 
 avg3 :: Double -> Double -> Double -> Double
-avg3 a b c = undefined
+avg3 a b c = (a+b+c)/3
 
 {-
    Результаты проверки:
 
-   ???
+	*Main> avg3 1 2 3
+	2.0
+
+	*Main> avg3 234 673 23
+	310.0
 
 -}
 
@@ -63,18 +73,56 @@ avg3 a b c = undefined
    расстановку скобок:
 
     2 + 3
+*Main> 2+3
+5
+
     mod 10 4
+*Main> mod 10 4
+2
+
     10 `mod` 4
+*Main> 10 `mod` 4
+2
+
     True && 5 < 10
+*Main> True && 5 < 10
+True
+
     5 < 7 || 10 > 3
+*Main> 5 < 7 || 10 > 3
+True
+
     sqrt (-2)
+*Main> sqrt (-2)
+NaN
+
     sqrt (sqrt 16)
+*Main> sqrt (sqrt 16)
+2.0
+
     let x = 4 in (sin x)^2 + (cos x)^2
+*Main> let x = 4 in (sin x)^2 + (cos x)^2
+1.0
+
     x
+*Main> x
+<interactive>:35:1: Not in scope: `x'
+
     7^(-1)
+*Main> 7^(-1)
+*** Exception: Negative exponent
+
     error "AAAA!!!!"
+*Main> error "AAAA!!!!"
+*** Exception: AAAA!!!!
+
     12345^54321
+*Main> 12345^54321
+много, действительно много
+
     2 < 3 || 9999954321^99912345 > 12345^54321
+*Main> 12345^543212 < 3 || 9999954321^99912345 > 12345^54321
+долго, действительно долго, но будет True
 
 -}
 
@@ -93,13 +141,36 @@ avg3 a b c = undefined
 
   Определите и сохраните в этом файле типы следующих выражений:
    5
+*Main> :t 5
+5 :: Num a => a
+
    5.0
+*Main> :t 5.0
+5.0 :: Fractional a => a
+
    sqrt 4
+*Main> :t sqrt 4
+sqrt 4 :: Floating a => a
+
    sqrt 4.0
+*Main> :t sqrt 4.0
+sqrt 4.0 :: Floating a => a
+
    2+3
+*Main> :t 2+3
+2+3 :: Num a => a
+
    5 < 7
+*Main> :t 5<7
+5<7 :: Bool
+
    if 2 > 3 then 7 else 5
+*Main> :t if 2 > 3 then 7 else 5
+if 2 > 3 then 7 else 5 :: Num a => a
+
    5 > 6 && False
+*Main> :t 5 > 6 && False
+5 > 6 && False :: Bool
 
    Команда ":set +t" включает режим, при котором печатается тип каждого вычисляемого выражения.
    Команда ":set +s" включает режим, при котором печатается время вычисления каждого выражения.
@@ -109,27 +180,35 @@ avg3 a b c = undefined
 -- 5) Объявление функций (2)
 
 -- а) Удвоение значения заданного числа
--- (объясните смысл типовой аннотации: ???)
+-- (объясните смысл типовой аннотации:)
+-- в данной функции мы переводим из типа "а" в тип "а", который, в свою очередь, принадлежит классу типов "Num"
 double :: Num a => a -> a
-double a = undefined
+double a = 2*a
 
 -- б) Утроение заданного числа
 --    (типовую аннотацию и образцы параметров следует написать самостоятельно)
-triple = undefined
+triple :: Num a => a -> a
+triple a = 3*a
 
 -- в) Определение наибольшего из трёх заданных целых чисел (можно воспользоваться стандартной
 --    двухаргументной функцией max).
 max3 :: Ord a => a -> a -> a -> a
-max3 = undefined
+max3 a b c = max a (max b c)
 
 {-
   Проверка:
 > max3 87 34 209
-???
+*Main> max3 87 34 209
+209
+
 > max3 22 28 30
-???
+*Main> max3 22 28 30
+30
+
 > max3 12 25 (-7)
-???
+*Main> max3 12 25 (-7)
+25
+
 
 -}
 
@@ -137,19 +216,41 @@ max3 = undefined
 -- (пользоваться стандартными логическими операциями не следует, обратите внимание на
 --  образцы параметров функции, последняя строка -- "во всех остальных случаях").
 bothTrue :: Bool -> Bool -> Bool
-bothTrue True True = undefined
-bothTrue _  _ = undefined
+bothTrue True True = True
+bothTrue _  _ = False
+
+{-*Main> bothTrue (5<7) (6<7)
+True
+*Main> bothTrue (5<7) (6>7)
+False
+*Main> bothTrue (5>7) (6>7)
+False-}
+
 
 
 -- д) Функция, возвращающая True, если только один из её аргументов равен True,
 -- и False в противном случае (пользоваться стандартными логическими операциями не следует).
 oneTrue :: Bool -> Bool -> Bool
-oneTrue = undefined
+oneTrue True False = True
+oneTrue False True = True
+oneTrue _ _ = False
+
+{-*Main> oneTrue (5>7) (4==4)
+True
+*Main> oneTrue (4/=2) (1>2)
+True
+*Main> oneTrue (4/=2) (4==4)
+False
+*Main> oneTrue (3>5) (2>3)
+False
+-}
+
+
 
 -- е) Дана температура в градусах Фаренгейта. Вычислить соответствующую температуру
 -- в градусах Цельсия.
 f2c :: Double -> Double
-f2c = undefined
+f2c a =(a-32)*(5.0/9.0)
 
 {-
    ж) Найти наибольший общий делитель двух целых чисел, пользуясь
@@ -158,12 +259,22 @@ f2c = undefined
       НОД(a, 0) = a.
 -}
 -- gcd' :: ???
-gcd' = undefined
+gcd' :: Int -> Int -> Int
+gcd' a b | (b/=0) = (gcd' b (mod a b))
+	 | (b==0) = a
+
 
 -- з) Функция, возвращающая название дня недели по его номеру (от 1 до 7),
 --    если номер неправильный, генерируется исключение (функция error).
 dayOfWeek :: Int -> String
-dayOfWeek = undefined
+dayOfWeek a | (a==1) = "Monday"
+            | (a==2) = "Tuesday"
+	    | (a==3) = "Wednesday"
+            | (a==4) = "Thursday"
+	    | (a==5) = "Friday"
+            | (a==6) = "Saturday"
+            | (a==7) = "Sunday"
+            | otherwise = error("error!")
 
 
 -- Далее типовые аннотации, если их нет, следует писать самостоятельно.
@@ -185,12 +296,21 @@ sign a
           4,    если x ≥ 2.
 -}
 
-eval_f = undefined
+eval_f :: Double -> Double
+eval_f x
+	| x<=0 = -x
+	| (x<2 && x>0) = x^2
+	| otherwise = 4
 
 -- б) Написать функцию, возвращающую текстовую характеристику ("hot", "warm", "cool", "cold")
 -- по заданному значению температуры в градусах Цельсия.
 describeTemperature :: Double -> String
-describeTemperature = undefined
+describeTemperature a
+	| a>=40 = "Hot"
+	| (a<40 && a>=15) = "Warm"
+	| (a<15 && a>=0) = "Cool"
+	| a<0 = "Cold"
+
 
 {- 
    в) (*) Дан список температур в градусах Фаренгейта. Вывести для каждого значения
@@ -212,7 +332,10 @@ sum_n n
   | otherwise = error "n should be >= 1"
 
 -- а) Вычислить сумму всех целых чисел от a до b включительно.
-sum_ab = undefined
+sum_ab a b = a
+sum a b
+	| a<b = a+sum a+1 b
+	| a=b 
 
 {-
    б) Числовая последовательность определяется следующим образом:
